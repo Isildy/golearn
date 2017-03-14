@@ -1,0 +1,9 @@
+test:
+  driver: postgres
+  open: user=golern dbname=golern sslmode=disable
+
+development:
+   driver: sqlite3
+   open: golern.db
+   dialect: sqlite3
+   import: github.com/mattn/go-sqlite3
