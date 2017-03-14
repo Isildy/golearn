@@ -27,17 +27,17 @@ func AllUsers() ([]User, error) {
 	}
 }
 
-//func getUser(id string) (*User, error) {
-//	var user User
-//	db := sqlx.Open("sqlite3", "./golern.db")
-//	defer db.Close()
-//	err = db.Get(&user, "SELECT * FROM user WHERE id=$1", id)
-//	if err != nil {
-//		return &User{}, err
-//	} else {
-//		return &user, nil
-//	}
-//}
+func GetUser(id string) (*User, error) {
+	var user User
+	db, err := sqlx.Open("sqlite3", "./golern.db")
+	defer db.Close()
+	err = db.Get(&user, "SELECT * FROM user WHERE id=$1", id)
+	if err != nil {
+		return &User{}, err
+	} else {
+		return &user, nil
+	}
+}
 
 func (u User) Save() User {
 	db, err := sql.Open("sqlite3", "./golern.db")
