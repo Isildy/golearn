@@ -14,7 +14,7 @@ type User struct {
 
 type Users []User
 
-func AllUsers() ([]User, error) {
+func UsersAll() ([]User, error) {
 	db, err := sqlx.Open("sqlite3", "./golern.db")
 	checkErr(err)
 	defer db.Close()
@@ -27,7 +27,7 @@ func AllUsers() ([]User, error) {
 	}
 }
 
-func GetUser(id string) (*User, error) {
+func UserFindById(id string) (*User, error) {
 	var user User
 	db, err := sqlx.Open("sqlite3", "./golern.db")
 	defer db.Close()
@@ -39,7 +39,7 @@ func GetUser(id string) (*User, error) {
 	}
 }
 
-func (u User) Save() User {
+func (u User) Save() (User, error) {
 	db, err := sql.Open("sqlite3", "./golern.db")
 	checkErr(err)
 	defer db.Close()
@@ -50,7 +50,26 @@ func (u User) Save() User {
 	id, err := res.LastInsertId()
 	checkErr(err)
 	u.Id = id
-	return u
+	if err != nil {
+		return User{}, err
+	} else {
+		return u, nil
+	}
+}
+
+func (u User) Delete() (User, error){
+	// find how sqlx do delete
+	db, err := sql.Open("sqlite3", "./golern.db")
+	checkErr(err)
+	defer db.Close()
+	res, err := db.Exec("delete from user where id=?", u.Id)
+	checkErr(err)
+	if err != nil {
+		fmt.Println(res)
+		return User{}, err
+	} else {
+		return u, nil
+	}
 }
 
 func (u User) String() string {
@@ -62,3 +81,5 @@ func checkErr(err error) {
 		panic("sql err: " + err.Error())
 	}
 }
+
+
