@@ -16,7 +16,6 @@ type Users []User
 
 func UsersAll() ([]User, error) {
 	db, err := sqlx.Open("sqlite3", "./golern.db")
-	checkErr(err)
 	defer db.Close()
 	users := []User{}
 	err = db.Select(&users, "SELECT * FROM user")
@@ -41,14 +40,9 @@ func UserFindById(id string) (*User, error) {
 
 func (u User) Save() (User, error) {
 	db, err := sql.Open("sqlite3", "./golern.db")
-	checkErr(err)
 	defer db.Close()
-
 	res, err := db.Exec("INSERT INTO user(id, first_name) values(?, ?)", nil, u.First_name)
-	checkErr(err)
-
 	id, err := res.LastInsertId()
-	checkErr(err)
 	u.Id = id
 	if err != nil {
 		return User{}, err
@@ -60,10 +54,8 @@ func (u User) Save() (User, error) {
 func (u User) Delete() (User, error){
 	// find how sqlx do delete
 	db, err := sql.Open("sqlite3", "./golern.db")
-	checkErr(err)
 	defer db.Close()
 	res, err := db.Exec("delete from user where id=?", u.Id)
-	checkErr(err)
 	if err != nil {
 		fmt.Println(res)
 		return User{}, err
