@@ -4,7 +4,7 @@ import(
 	"golern/models"
 	"encoding/json"
 	"fmt"
-	"log"
+	//"log"
 	"net/http"
 	"github.com/gorilla/mux"
 )
@@ -14,7 +14,7 @@ type appHandler func(w http.ResponseWriter, r *http.Request) error
 func (h appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := h(w, r); err != nil {
 		// add diferent errors hednling
-		http.Error(w, err.Error(), 500)
+		http.Error(w, http.StatusText(500), 500)
 	}
 }
 

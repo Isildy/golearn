@@ -1,9 +1,8 @@
 package models
 
 import (
+	"golern/config"
 	_ "github.com/mattn/go-sqlite3"
-	"database/sql"
-	"github.com/jmoiron/sqlx"
 	"fmt"
 )
 
@@ -15,11 +14,10 @@ type User struct {
 type Users []User
 
 func UsersAll() ([]User, error) {
-	db, err := sqlx.Open("sqlite3", "./golern.db")
-	defer db.Close()
 	users := []User{}
-	err = db.Select(&users, "SELECT * FROM user")
+	err := config.DB.Select(&users, "SELECT * FROM user")
 	if err != nil {
+		fmt.Println(err)
 		return users, err
 	} else {
 		return users, nil
@@ -28,9 +26,7 @@ func UsersAll() ([]User, error) {
 
 func UserFindById(id string) (*User, error) {
 	var user User
-	db, err := sqlx.Open("sqlite3", "./golern.db")
-	defer db.Close()
-	err = db.Get(&user, "SELECT * FROM user WHERE id=$1", id)
+	err := config.DB.Get(&user, "SELECT * FROM user WHERE id=$1", id)
 	if err != nil {
 		return &User{}, err
 	} else {
@@ -39,9 +35,7 @@ func UserFindById(id string) (*User, error) {
 }
 
 func (u User) Save() (User, error) {
-	db, err := sql.Open("sqlite3", "./golern.db")
-	defer db.Close()
-	res, err := db.Exec("INSERT INTO user(id, first_name) values(?, ?)", nil, u.First_name)
+	res, err := config.DB.Exec("INSERT INTO user(id, first_name) values(?, ?)", nil, u.First_name)
 	id, err := res.LastInsertId()
 	u.Id = id
 	if err != nil {
@@ -52,12 +46,8 @@ func (u User) Save() (User, error) {
 }
 
 func (u User) Delete() (User, error){
-	// find how sqlx do delete
-	db, err := sql.Open("sqlite3", "./golern.db")
-	defer db.Close()
-	res, err := db.Exec("delete from user where id=?", u.Id)
+	_, err := config.DB.Exec("delete from user where id=?", u.Id)
 	if err != nil {
-		fmt.Println(res)
 		return User{}, err
 	} else {
 		return u, nil
@@ -66,12 +56,6 @@ func (u User) Delete() (User, error){
 
 func (u User) String() string {
 	return fmt.Sprintf("{id:%d, first_name:%s}", u.Id, u.First_name)
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic("sql err: " + err.Error())
-	}
 }
 
 

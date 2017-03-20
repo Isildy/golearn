@@ -1,15 +1,15 @@
 package main
 
 import (
-	"log"
+	"golern/config"
 	"net/http"
 	"github.com/gorilla/mux"
-	//"strconv"
+	"log"
 )
 
 func main() {
+	config.InitDB();
 
-	//add db conection
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
 		var handler http.Handler
