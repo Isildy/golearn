@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+
+	//add db conection
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
 		var handler http.Handler
@@ -15,7 +17,7 @@ func main() {
 		handler = Logger(handler, route.Name)
 
 		router.
-		Methods(route.Method).
+			Methods(route.Method).
 			Path(route.Pattern).
 			Name(route.Name).
 			Handler(handler)

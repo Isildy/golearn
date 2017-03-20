@@ -6,7 +6,7 @@ type Route struct {
 	Name        string
 	Method      string
 	Pattern     string
-	HandlerFunc http.HandlerFunc
+	HandlerFunc http.Handler
 }
 
 type Routes []Route
@@ -16,25 +16,25 @@ var routes = Routes{
 		"UsersIndex",
 		"GET",
 		"/users",
-		UsersIndex,
+		appHandler(UsersIndex),
 	},
 	Route{
 		"UsersShow",
 		"GET",
 		"/users/{id}",
-		UsersShow,
+		appHandler(UsersShow),
 	},
 	Route{
 		"UsersCreate",
 		"POST",
 		"/users",
-		UsersCreate,
+		appHandler(UsersCreate),
 	},
 	Route{
 		"UsersDelete",
 		"GET",
 		"/users/{id}",
-		UsersDelete,
+		appHandler(UsersDelete),
 	},
 
 }
